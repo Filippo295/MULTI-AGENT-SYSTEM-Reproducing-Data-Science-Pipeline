@@ -1,0 +1,13 @@
+pandas
+numpy
+scikit-learn
+statsmodels
+shap
+xgboost
+matplotlib
+seaborn
+google-genai
+pydantic
+tenacity
+markdown
+xhtml2pdf

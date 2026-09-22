@@ -1,0 +1,71 @@
+{
+  "project": {
+    "name": "AFB Agent Team — UNITING pipeline reproduction (reels-only new dataset)",
+    "row_unit": "one video per row"
+  },
+  "paths": {
+    "raw_dataset": "data/raw/new_dataset.csv",
+    "processed_dir": "data/processed",
+    "plots_dir": "outputs/plots",
+    "models_dir": "outputs/models",
+    "report_dir": "outputs/report"
+  },
+  "columns": {
+    "key": "Filename",
+    "reach_proxy": "Views",
+    "group_var": "Creator name",
+    "date": "Post creation date",
+    "time": "Post creation time",
+    "caption": "Post caption",
+    "type_of_content": "Type of content",
+    "dead_weight": ["ID Channel", "Channel", "Social permalink", "Video transcript"],
+    "identifiers_not_features": ["Filename", "Social permalink", "Channel", "ID Channel", "Creator name", "Video transcript"],
+    "numeric_predictors": ["Followers", "Views", "Likes", "Comments", "Shares", "Saves", "media_duration_sec", "caption_length"],
+    "llm_video_features": ["tone_video_api", "voice_speed_video_api", "microkinetics_video_api", "activity_video_api", "format_video_api", "product_integration_api", "funnel_api", "posizionamento_api", "hook_score_api"],
+    "llm_caption_features": ["tone_caption_api", "funnel_caption_api"]
+  },
+  "constants": {
+    "engagement_alpha": 1,
+    "engagement_beta": 20,
+    "classification_cut_percentile": 0.75,
+    "kmeans_k": 3,
+    "lasso_alpha": 0.05,
+    "moran_k": 3,
+    "nb_top_features": 5,
+    "random_state": 42,
+    "markov_top_creators": 5,
+    "moran_top_creators": 5,
+    "min_posts_per_creator": 25
+  },
+  "targets": {
+    "ENGAGE_RATE": "(alpha*Likes + beta*Comments) / Views",
+    "COMM_PER_LIKE": "Comments / Likes",
+    "PERC_REACHED": "Views / Followers"
+  },
+  "data_groups": {
+    "A_all_rows": "analyses with no video features run on ALL rows (~10000)",
+    "B_video_rows": "analyses using video features run ONLY on rows that have a video (~6084)"
+  },
+  "video": {
+    "source": "gcs",
+    "gcs_bucket": "afb-uniting-videos",
+    "gcs_prefix": "nuovi-video",
+    "filename_pattern": "{Filename}_.mp4",
+    "filename_pattern_status": "TO CONFIRM against `gcloud storage ls gs://afb-uniting-videos/nuovi-video/`",
+    "local_fallback_dir": "C:/Users/Pietro Mongelli/OneDrive - Politecnico di Milano/File di Matteo Tracci - Media NEW"
+  },
+  "gemini": {
+    "auth_method": "vertexai",
+    "project": "project-997a2ade-117b-4af1-926",
+    "location": "us-central1",
+    "model": "gemini-2.5-flash",
+    "temperature": 0,
+    "max_output_tokens": 4096,
+    "thinking_budget": 0,
+    "service_account_file": "secrets/gcp_service_account.json",
+    "api_key_file": "secrets/gemini_api_key.txt",
+    "rate_limit_sleep_sec": 2,
+    "max_retries": 2,
+    "resumable": true
+  }
+}
